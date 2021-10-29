@@ -1,0 +1,32 @@
+{
+  "name": "oslash_backend_clone",
+  "version": "1.0.0",
+  "description": "This project will be done as the home assignment for oslash backend API (clone)",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon ./server.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/5war00p/oslash_backend_clone.git"
+  },
+  "author": "5war00p",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/5war00p/oslash_backend_clone/issues"
+  },
+  "homepage": "https://github.com/5war00p/oslash_backend_clone#readme",
+  "devDependencies": {
+    "@types/node": "^16.11.6",
+    "jest": "^27.3.1",
+    "ts-node": "^10.4.0",
+    "tslib": "^2.3.1"
+  },
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "fastify": "^3.22.1",
+    "mongoose": "^6.0.12",
+    "nodemon": "^2.0.14"
+  }
+}
