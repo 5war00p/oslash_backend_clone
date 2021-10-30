@@ -1,4 +1,4 @@
-export async function routes(fastify: any, options: any) {
+export async function commonroutes(fastify: any, options: any) {
   fastify.get("/", async (req: any, res: any) => {
     /*
       Sample route
