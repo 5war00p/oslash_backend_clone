@@ -13,4 +13,9 @@ async function connectDB() {
     });
 }
 
-export { connectDB };
+// Exporting all schemas thourgh db-connector
+module.exports = {
+  connectDB,
+  User: require("./user"),
+  Shortcut: require("./shortcut"),
+};
