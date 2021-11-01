@@ -4,7 +4,7 @@ const ShortcutSchema = new mongoose.Schema(
   {
     // Requried Fields
     shortlink: {
-      typer: String,
+      type: String,
       required: true,
     },
 
@@ -34,6 +34,8 @@ const ShortcutSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+ShortcutSchema.index({ description: 1, tags: 1, shortlink: 1, url: 1 });
 
 ShortcutSchema.pre("save", function (next) {
   if (this.isNew && this.shortlink) {

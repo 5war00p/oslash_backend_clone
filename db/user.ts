@@ -3,7 +3,13 @@ import mongoose from "mongoose";
 const UserSchema = new mongoose.Schema(
   {
     // Required Fields
-    gmail: {
+    email: {
+      type: String,
+      unique: true,
+      required: true,
+    },
+
+    password: {
       type: String,
       required: true,
     },
@@ -14,12 +20,16 @@ const UserSchema = new mongoose.Schema(
     },
 
     // Non-required Fields
-    image_url: {
+    profile_image: {
       type: String,
     },
 
     last_login: {
       type: Date,
+    },
+
+    refresh_token: {
+      type: String,
     },
 
     // References
