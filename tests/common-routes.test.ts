@@ -1,14 +1,14 @@
-import { fastify } from "../server";
+import app from "../server";
 
 test("server status check", async () => {
-  const response = await fastify.inject("/");
+  const response = await (await app).inject("/");
 
   expect(response.statusCode).toBe(200);
 });
 
 /* describe("common routes tests", () => {
   test("should return 200 upon successful", async () => {
-    const response = await fastify.inject("/");
+    const response = await app.inject("/");
 
     expect(response.statusCode).toBe(200);
   });
