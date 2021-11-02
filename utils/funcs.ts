@@ -1,5 +1,10 @@
+/* All the requried methods that used over and over again in entire API are decalred here */
+
+// library imports
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+
+// local imports
 import { LooseObject } from "./globals";
 
 const JWT_ACCESS_SECRET = process.env.ACCESS_TOKEN_SECRET || "access secret";
@@ -8,6 +13,7 @@ const JWT_REFRESH_SECRET = process.env.REFRESH_TOKEN_SECRET || "refresh secret";
 const ACCESS_TKN_EXP_TIME = process.env.ACCESS_TKN_EXP_TIME || "1h";
 const REFRESH_TKN_EXP_TIME = process.env.REFRESH_TKN_EXP_TIME || "28d";
 
+// method to format Error response
 const sendError = (res: any, err: any, resCode: number) => {
   err = err || "Internal Server Error";
   resCode = resCode || 500;
@@ -26,6 +32,7 @@ const sendError = (res: any, err: any, resCode: number) => {
   res.send(response);
 };
 
+// method to format Success response
 const sendSuccess = (
   res: any,
   data?: any,
@@ -49,6 +56,7 @@ const sendSuccess = (
   res.send(response);
 };
 
+// method to generate JsonWebToken (access_token, refresh_token)
 const genJWT = (
   data: object,
   access_secret: string = JWT_ACCESS_SECRET,
@@ -66,11 +74,13 @@ const genJWT = (
   return { access_token, refresh_token };
 };
 
+// method to generate hash for encrypting passwords using bcrypt
 const genHash = (password: string) => {
   let salt = bcrypt.genSaltSync(10);
   return bcrypt.hashSync(password, salt);
 };
 
+// method to set tokens in headers
 const genJWTFromHeaders = (req: any) => {
   let access_token = req.headers["x-my-access-token"] || "";
   let refresh_token = req.headers["x-my-refresh-token"] || "";

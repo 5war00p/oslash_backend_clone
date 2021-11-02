@@ -1,4 +1,9 @@
+/* JWT Manager that verifies & validates the tokens */
+
+// library imports
 const jwt = require("jsonwebtoken");
+
+//local imports
 const funcs = require("./funcs");
 
 const JWT_ACCESS_SECRET = process.env.ACCESS_TOKEN_SECRET || "access secret";
@@ -33,6 +38,7 @@ export = (type: String) => {
       delete data["exp"];
       delete data["iat"];
       req.jwt_data = data;
+
       next();
     });
   };
