@@ -1,16 +1,16 @@
+// Imports from packages
 const mongoose = require("mongoose");
 
 const conn_string = process.env.DB_URI || "Invalid Connection String";
 
+// method to connect mongoDB Database
 async function connectDB() {
-  await mongoose
-    .connect(conn_string)
-    .then(async () => {
-      console.log("Mongo connection established successfully!");
-    })
-    .catch((err: any) => {
-      console.error(err.message);
-    });
+  try {
+    await mongoose.connect(conn_string);
+    console.info("Mongo connection established successfully!");
+  } catch (err: any) {
+    console.error(err.message);
+  }
 }
 
 // Exporting all schemas thourgh db-connector

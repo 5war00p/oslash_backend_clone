@@ -1,3 +1,4 @@
+// Imports from packages
 import mongoose from "mongoose";
 
 const ShortcutSchema = new mongoose.Schema(
@@ -5,11 +6,13 @@ const ShortcutSchema = new mongoose.Schema(
     // Requried Fields
     shortlink: {
       type: String,
+      unique: true,
       required: true,
     },
 
     url: {
       type: String,
+      unique: true,
       required: true,
     },
 
