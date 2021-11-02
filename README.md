@@ -46,12 +46,12 @@ npm i
 
 **.env** (Environment Variables) file setup
 ```
-API_PORT                                                          # port to run server
-API_VERSION                                                       # API version
-API_BIND_ADDR                                                     # binding address (if any) by default set to '0.0.0.0'
-DB_URI                                                            # mongo DB_URI
-ACCESS_TKN_EXP_TIME                                               # expire time for access_token
-REFRESH_TKN_EXP_TIME                                              # expire time for refresh_token
-ACCESS_TOKEN_SECRET                                               # access_token secret
-REFRESH_TOKEN_SECRET                                              # refresh_token secret
+API_PORT                                          # port to run server
+API_VERSION                                       # API version
+API_BIND_ADDR                                     # binding address (if any) by default set to '0.0.0.0'
+DB_URI                                            # mongo DB_URI
+ACCESS_TKN_EXP_TIME                               # expire time for access_token
+REFRESH_TKN_EXP_TIME                              # expire time for refresh_token
+ACCESS_TOKEN_SECRET                               # access_token secret
+REFRESH_TOKEN_SECRET                              # refresh_token secret
 ```
