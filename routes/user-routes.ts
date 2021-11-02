@@ -6,7 +6,7 @@ export async function userRoutes(fastify: any, options: any) {
   // Profile route
   fastify.get(
     "/profile",
-    { preHandler: jwtManager("access_token") },
+    { preValidation: jwtManager("access_token") },
     async (req: any, res: any, next: any) => {
       const _id = req.jwt_data._id;
       if (!models.mongoose.Types.ObjectId.isValid(_id))
@@ -15,9 +15,8 @@ export async function userRoutes(fastify: any, options: any) {
       models.User.findById(_id)
         .select({ email: 1, name: 1, shortcuts: 1 })
         .then((user: any) => {
-          if (!user) throw { message: "User not found", code: 404 };
-
-          return funcs.sendSuccess(res, user);
+          if (!user) return funcs.sendError(res, "User not found", 404);
+          else return funcs.sendSuccess(res, user);
         })
         .catch(next);
     }

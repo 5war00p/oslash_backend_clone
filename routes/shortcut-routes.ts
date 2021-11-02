@@ -6,7 +6,7 @@ export async function shortcutRoutes(fastify: any, options: any) {
   // List sll user shortcuts
   fastify.get(
     "/list",
-    { preHandler: jwtManager("access_token") },
+    { preValidation: jwtManager("access_token") },
     async (req: any, res: any, next: any) => {
       const _id = req.jwt_data._id;
       if (!models.mongoose.Types.ObjectId.isValid(_id))
@@ -30,12 +30,17 @@ export async function shortcutRoutes(fastify: any, options: any) {
   // Search shortcuts based on keyword
   fastify.post(
     "/search",
-    { preHandler: jwtManager("access_token") },
+    { preValidation: jwtManager("access_token") },
     async (req: any, res: any, next: any) => {
-      const { user_id, search_key } = req.body;
-      if (!models.mongoose.Types.ObjectId.isValid(user_id)) {
-        return funcs.sendError(res, "Invalid Shortcut ID!", 403);
-      }
+      const user_id = req.jwt_data._id;
+      const { search_key } = req.body;
+
+      if (!search_key)
+        return funcs.sendError(res, "Missing some required fields", 406);
+
+      if (!models.mongoose.Types.ObjectId.isValid(user_id))
+        return funcs.sendError(res, "Invalid User ID!", 403);
+
       models.Shortcut.find({
         $and: [
           { user: user_id },
@@ -51,7 +56,7 @@ export async function shortcutRoutes(fastify: any, options: any) {
       })
         .select({ __v: 0, createdAt: 0, updatedAt: 0, user: 0 })
         .then((results: any) => {
-          if (!results) {
+          if (results.length == 0) {
             return funcs.sendSuccess(
               res,
               "No results found for your search keyword"
@@ -67,9 +72,10 @@ export async function shortcutRoutes(fastify: any, options: any) {
   // Create new shortcut
   fastify.post(
     "/new",
-    { preHandler: jwtManager("access_token") },
+    { preValidation: jwtManager("access_token") },
     async (req: any, res: any, next: any) => {
-      const { user_id, shortcut } = req.body;
+      const user_id = req.jwt_data._id;
+      const shortcut = req.body.shortcut;
       if (!models.mongoose.Types.ObjectId.isValid(user_id))
         return funcs.sendError(res, "Invalid User ID!", 403);
 
@@ -89,18 +95,31 @@ export async function shortcutRoutes(fastify: any, options: any) {
           });
         })
         .then((_: any) => {
-          return funcs.sendSuccess(res, "Added Successfully!");
+          return funcs.sendSuccess(res, "Shortcut Added Successfully!");
         })
-        .catch(next);
+        .catch((err: any) => {
+          if (err.code === 11000)
+            return funcs.sendError(
+              res,
+              "Shortcut with same url or same name already exists",
+              409
+            );
+          else
+            return funcs.sendError(res, err.err_message || err, err.err_code);
+        });
     }
   );
 
   // Update an existed shortcut
   fastify.patch(
     "/update",
-    { preHandler: jwtManager("access_token") },
+    { preValidation: jwtManager("access_token") },
     async (req: any, res: any, next: any) => {
       const { _id, shortlink, description, url, tags } = req.body;
+
+      if (!_id)
+        return funcs.sendError(res, "Missing some required fields", 406);
+
       if (!models.mongoose.Types.ObjectId.isValid(_id)) {
         return funcs.sendError(res, "Invalid Shortcut ID!", 403);
       }
@@ -117,16 +136,21 @@ export async function shortcutRoutes(fastify: any, options: any) {
           return shortcut.save();
         })
         .then((shortcut: any) => {
+          delete shortcut.__v;
+          delete shortcut.user;
+          delete shortcut.createdAt;
           return funcs.sendSuccess(res, shortcut);
         })
-        .catch(next);
+        .catch((err: any) => {
+          return funcs.sendError(res, err.err_message, err.err_code);
+        });
     }
   );
 
   // Remove shortcut
   fastify.delete(
     "/remove",
-    { preHandler: jwtManager("access_token") },
+    { preValidation: jwtManager("access_token") },
     async (req: any, res: any, next: any) => {
       const _id = req.body._id;
       if (!models.mongoose.Types.ObjectId.isValid(_id)) {
@@ -147,7 +171,9 @@ export async function shortcutRoutes(fastify: any, options: any) {
         .then((_: any) => {
           return funcs.sendSuccess(res, "Shortcut Deleted Successfully!");
         })
-        .catch(next);
+        .catch((err: any) => {
+          return funcs.sendError(res, err.err_message, err.err_code);
+        });
     }
   );
 }
